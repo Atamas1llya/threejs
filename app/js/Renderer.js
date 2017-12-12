@@ -11,7 +11,7 @@ export default class Renderer {
     this.scene = new THREE.Scene();
     this.renderer = new THREE.WebGLRenderer({
       alpha: true,
-      // antialias: true,
+      antialias: true,
     });
 
     this.scene.fog = new THREE.Fog(0x222233, 0, 20000);
@@ -53,7 +53,7 @@ export default class Renderer {
     requestAnimationFrame(this._animate);
 
     this.user.animateMovementTick();
-    
+
     this.renderer.render(this.scene, this.user.camera);
   }
 
