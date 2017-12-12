@@ -2,8 +2,10 @@ import * as THREE from 'three';
 import lock from 'pointer-lock';
 
 export default class User {
-  constructor({ position }) {
+  constructor({ position, permissions }) {
     this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+
+    this.permissions = permissions || {};
 
     const [x, y, z] = position;
     this.camera.position.set(x, y, z);
@@ -45,8 +47,20 @@ export default class User {
       this.camera.position.x -= Math.sin(this.camera.rotation.y - Math.PI / 2) * 0.1;
       this.camera.position.z -= Math.cos(this.camera.rotation.y - Math.PI / 2) * 0.1;
     }
-    if (movement.top) this.camera.position.y += 0.2;
-    if (movement.bottom) this.camera.position.y -= 0.2;
+    if (movement.top) {
+      if (this.permissions.fly) {
+        this.camera.position.y += 0.2
+      } else {
+
+      }
+    }
+    if (movement.bottom) {
+      if (this.permissions.fly) {
+        this.camera.position.y -= 0.2;
+      } else {
+        
+      }
+    }
   }
 
   _initializeControls = () => {

@@ -5,12 +5,17 @@ import Renderer from './Renderer';
 import User from './entities/User';
 import Block from './entities/Block';
 
+import userConfig from './config/user';
+
 import map from './maps/middle';
 
 import '../css/index.css'
 
 const user = new User({
-  position: [0, 2, 20],
+  position: [0, userConfig.height, 20],
+  permissions: {
+    fly: true,
+  }
 });
 const renderer = new Renderer({ user });
 
