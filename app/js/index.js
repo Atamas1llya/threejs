@@ -1,48 +1,17 @@
 import 'normalize.css';
-import * as THREE from 'three';
 
 import Renderer from './Renderer';
 import User from './entities/User';
 import Block from './entities/Block';
 
-import map from './maps/advanced';
+import map from './maps/simple';
 
-import { createCube, createLight } from './utils/objects';
+import '../css/index.css'
 
-const light = createLight({
-  position: {
-    x: 5,
-    y: 15,
-    z: 10,
-  },
-  intensivity: 1.2,
-  range: 25,
+const user = new User({
+  position: [0, 2, 20],
 });
-const lightBlock = new Block({
-  position: {
-    x: 5,
-    y: 4,
-    z: 10,
-  },
-  height: 0,
-  color: '#212121',
-})
+const renderer = new Renderer({ user });
 
-Renderer.render();
-Renderer.renderElement(light);
-Renderer.renderElement(lightBlock.entity);
-
-for (let i = 0; i < map.length; i++) {
-  for (let j = 0; j < map[i].length; j++) {
-    const block = new Block({
-      position: {
-        x: i,
-        y: -1,
-        z: j,
-      },
-      height: map[i][j],
-      color: 'green',
-    })
-    Renderer.renderElement(block.entity);
-  }
-}
+renderer.init(document.querySelector('#root'));
+renderer.renderMap(map);

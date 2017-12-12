@@ -1,19 +1,16 @@
 import * as THREE from 'three';
 
 export default class Block {
-  constructor({ position, height, color }) {
-    this.cube = new THREE.Mesh(
-      new THREE.BoxGeometry(1, height, 1),
-      new THREE.MeshLambertMaterial({ color }),
-    );
-    this.cube.position.x = position.x;
-    this.cube.position.y = position.y + height / 2;
-    this.cube.position.z = position.z;
-    this.cube.receiveShadow = true;
-    this.cube.castShadow = true;
-  }
+  constructor({ size, position, color }) {
+    const [width, height, depth] = size;
+    const [x, y, z] = position;
 
-  get entity() {
-    return this.cube;
+    const geometry = new THREE.CubeGeometry(width, height, depth);
+    const material = new THREE.MeshBasicMaterial({ color });
+
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+
+    this.mesh = mesh;
   }
 }

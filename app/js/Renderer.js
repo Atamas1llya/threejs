@@ -1,19 +1,18 @@
 import * as THREE from 'three';
-import constants from './config/constants';
 
-import User from './entities/User';
+import Block from './entities/Block';
 
-class Renderer {
-  constructor() {
-    this.rootElement = document.querySelector('#root');
+export default class Renderer {
+  constructor({ user }) {
     this.scene = new THREE.Scene();
-    this.renderer = new THREE.WebGLRenderer({ alpha: true });
+    this.scene.add(new THREE.AxesHelper(5));
+    this.user = user;
 
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.BasicShadowMap;
-
-    this.light = new THREE.AmbientLight('white', 0.8);
-    this.scene.add(this.light)
+    this.scene = new THREE.Scene();
+    this.renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      // antialias: true,
+    });
 
     this.scene.fog = new THREE.Fog(0x222233, 0, 20000);
     this.renderer.setClearColor('#212121', 1 );
@@ -21,59 +20,47 @@ class Renderer {
     window.addEventListener('resize', this._resize);
   }
 
-  render = () => {
-    this.rootElement.appendChild(this.renderer.domElement);
+
+  init = (element) => {
+    element.appendChild(this.renderer.domElement);
+    this.element = element;
 
     this._resize();
     this._animate();
   }
 
+
   renderElement = element => this.scene.add(element);
+
+
+  renderMap = (map) => {
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[i].length; j++) {
+        for (let k = 0; k < map[i][j]; k++) {
+          const block = new Block({
+            size: [1, 1, 1],
+            position: [i, k, j],
+            color: 'white',
+          })
+          this.renderElement(block.mesh);
+        }
+      }
+    }
+  }
+
 
   _animate = () => {
     requestAnimationFrame(this._animate);
-    this._checkMovement(User.keyboard);
 
-    this.renderer.render(this.scene, User.camera);
+    this.renderer.render(this.scene, this.user.camera);
   }
+
 
   _resize = () => {
-    User.camera.aspect = window.innerWidth / window.innerHeight;
-    User.camera.updateProjectionMatrix();
+    this.user.camera.aspect = window.innerWidth / window.innerHeight;
+    this.user.camera.updateProjectionMatrix();
 
-    this.renderer.setSize( window.innerWidth, window.innerHeight );
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-  _checkMovement = (keyboard) => {
-    if (keyboard[constants.BUTTON_LEFT]) {
-      User.camera.rotation.y += Math.PI * 0.01;
-    }
-    if (keyboard[constants.BUTTON_RIGHT]) {
-      User.camera.rotation.y -= Math.PI * 0.01;
-    }
-    if (keyboard[constants.BUTTON_LEFT_A]) {
-      User.camera.position.x += Math.sin(User.camera.rotation.y - Math.PI / 2) * 0.1;
-      User.camera.position.z += Math.cos(User.camera.rotation.y - Math.PI / 2) * 0.1;
-    }
-    if (keyboard[constants.BUTTON_RIGHT_D]) {
-      User.camera.position.x -= Math.sin(User.camera.rotation.y - Math.PI / 2) * 0.1;
-      User.camera.position.z -= Math.cos(User.camera.rotation.y - Math.PI / 2) * 0.1;
-    }
-    if (keyboard[constants.BUTTON_TOP_W]) {
-      User.camera.position.x -= Math.sin(User.camera.rotation.y) * 0.1;
-      User.camera.position.z -= Math.cos(User.camera.rotation.y) * 0.1;
-    }
-    if (keyboard[constants.BUTTON_DOWN_S]) {
-      User.camera.position.x += Math.sin(User.camera.rotation.y) * 0.1;
-      User.camera.position.z += Math.cos(User.camera.rotation.y) * 0.1;
-    }
-    if (keyboard[constants.BUTTON_SPACE]) {
-      User.camera.position.y += 0.1;
-    }
-    if (keyboard[constants.BUTTON_SHIFT]) {
-      User.camera.position.y -= 0.1;
-    }
-  }
 }
-
-export default new Renderer();
