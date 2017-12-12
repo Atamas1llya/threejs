@@ -52,6 +52,8 @@ export default class Renderer {
   _animate = () => {
     requestAnimationFrame(this._animate);
 
+    this.user.animateMovementTick();
+    
     this.renderer.render(this.scene, this.user.camera);
   }
 
