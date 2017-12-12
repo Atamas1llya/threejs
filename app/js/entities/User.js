@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import lock from 'pointer-lock';
 
 export default class User {
   constructor({ position }) {
@@ -6,6 +7,7 @@ export default class User {
 
     const [x, y, z] = position;
     this.camera.position.set(x, y, z);
+    this.camera.rotation.order = 'YXZ'; // default is 'XYZ'
 
     this.movement = {
       forward: false,
@@ -17,6 +19,9 @@ export default class User {
     }
 
     this._initializeControls();
+
+    this.pointer = lock(document.body);
+    this.pointer.on('attain', this._setupPointer);
   }
 
   animateMovementTick = () => {
@@ -24,10 +29,22 @@ export default class User {
 
     // FIXME: semidirectional movement is faster than onedirectional
 
-    if (movement.forward) this.camera.position.z -= 0.2;
-    if (movement.back) this.camera.position.z += 0.2;
-    if (movement.left) this.camera.position.x -= 0.2;
-    if (movement.right) this.camera.position.x += 0.2;
+    if (movement.forward) {
+      this.camera.position.x -= Math.sin(this.camera.rotation.y) * 0.1;
+      this.camera.position.z -= Math.cos(this.camera.rotation.y) * 0.1;
+    }
+    if (movement.back) {
+      this.camera.position.x += Math.sin(this.camera.rotation.y) * 0.1;
+      this.camera.position.z += Math.cos(this.camera.rotation.y) * 0.1;
+    }
+    if (movement.left) {
+      this.camera.position.x += Math.sin(this.camera.rotation.y - Math.PI / 2) * 0.1;
+      this.camera.position.z += Math.cos(this.camera.rotation.y - Math.PI / 2) * 0.1;
+    }
+    if (movement.right) {
+      this.camera.position.x -= Math.sin(this.camera.rotation.y - Math.PI / 2) * 0.1;
+      this.camera.position.z -= Math.cos(this.camera.rotation.y - Math.PI / 2) * 0.1;
+    }
     if (movement.top) this.camera.position.y += 0.2;
     if (movement.bottom) this.camera.position.y -= 0.2;
   }
@@ -57,6 +74,22 @@ export default class User {
         case 16: movement.bottom = false; break;
       }
       this.movement = movement;
+    })
+  }
+
+  _setupPointer = (movements) => {
+    const initial = { x: 0, y: 0 }
+
+    movements.on('data', (move) => {
+      initial.x += move.dx;
+      initial.y += move.dy;
+
+      // this.camera.position.x = initial.x;
+      // this.camera.position.y = initial.y;
+
+      this.camera.rotation.y = -(initial.x * Math.PI / 180);
+      this.camera.rotation.x = -(initial.y * Math.PI / 180);
+      this.camera.updateProjectionMatrix();
     })
   }
 }
