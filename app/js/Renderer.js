@@ -8,6 +8,7 @@ export default class Renderer {
     this.scene = new THREE.Scene();
     this.scene.add(new THREE.AxesHelper(5));
     this.user = user;
+    this.elements = [];
 
     this.scene = new THREE.Scene();
     this.renderer = new THREE.WebGLRenderer({
@@ -22,32 +23,7 @@ export default class Renderer {
     world.gravity.set(0,-2, 0);
     world.broadphase = new CANNON.NaiveBroadphase();
     world.solver.iterations = 10;
-
-    this.timeStep = 1 / 60;
     this.world = world;
-
-    const boxShape = new CANNON.Box(new CANNON.Vec3(1,1,1));
-    const boxBody = new CANNON.Body({ mass: 1 });
-    boxBody.position.set(5, 10, 5);
-    boxBody.addShape(boxShape);
-    this.box = boxBody;
-    this.world.add(boxBody);
-
-    const boxShape2 = new CANNON.Box(new CANNON.Vec3(1,1,1));
-    const boxBody2 = new CANNON.Body({ mass: 0 });
-    boxBody2.position.set(5, 5, 5);
-    boxBody2.addShape(boxShape2);
-    this.box2 = boxBody2;
-    this.world.add(boxBody2);
-
-    const block = new Block({
-      size: [1, 1, 1],
-      position: [3, 3, 3],
-      color: 'green',
-    })
-    this.renderElement(block.mesh);
-    this.block = block.mesh
-
 
     window.addEventListener('resize', this._resize);
   }
@@ -63,7 +39,6 @@ export default class Renderer {
 
 
   renderElement = element => {
-    const { x, y, z } = element.scale;
     this.scene.add(element);
   };
 
@@ -78,16 +53,16 @@ export default class Renderer {
             color: 'green',
           })
           this.renderElement(block.mesh);
+          this.world.add(block.physic);
+          this.elements.push(block);
         }
       }
     }
   }
 
   _updatePhysics = () => {
-      this.world.step(1/60);
-      // Copy coordinates from Cannon.js to Three.js
-      this.block.position.copy(this.box.position);
-      this.block.quaternion.copy(this.box.quaternion);
+    this.world.step(1/60);
+    this.elements.forEach(element => element.updatePosition());
   }
 
 
