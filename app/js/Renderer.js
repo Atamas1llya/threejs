@@ -60,6 +60,25 @@ export default class Renderer {
     }
   }
 
+  render3dMap = (map) => {
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[i].length; j++) {
+        for (let k = 0; k < map[i][j].length; k++) {
+          if (map[i][j][k]) {
+            const block = new Block({
+              size: [1, 1, 1],
+              position: [k, i, j],
+              color: 'green',
+            })
+            this.renderElement(block.mesh);
+            this.world.add(block.physic);
+            this.elements.push(block);
+          }
+        }
+      }
+    }
+  }
+
   _updatePhysics = () => {
     this.world.step(1/60);
     this.elements.forEach(element => element.updatePosition());
