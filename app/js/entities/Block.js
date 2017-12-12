@@ -6,7 +6,7 @@ export default class Block {
     const [x, y, z] = position;
 
     const geometry = new THREE.CubeGeometry(width, height, depth);
-    const material = new THREE.MeshBasicMaterial({ color });
+    const material = new THREE.MeshLambertMaterial({ color });
 
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);

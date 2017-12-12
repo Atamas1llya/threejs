@@ -15,7 +15,7 @@ export default class Renderer {
     });
 
     this.scene.fog = new THREE.Fog(0x222233, 0, 20000);
-    this.renderer.setClearColor('#212121', 1 );
+    this.renderer.setClearColor('#212121', 1);
 
     window.addEventListener('resize', this._resize);
   }
@@ -40,7 +40,7 @@ export default class Renderer {
           const block = new Block({
             size: [1, 1, 1],
             position: [i, k, j],
-            color: 'white',
+            color: 'green',
           })
           this.renderElement(block.mesh);
         }
