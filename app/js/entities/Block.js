@@ -9,6 +9,8 @@ export default class Block {
     this.cube.position.x = position.x;
     this.cube.position.y = position.y + height / 2;
     this.cube.position.z = position.z;
+    this.cube.receiveShadow = true;
+    this.cube.castShadow = true;
   }
 
   get entity() {

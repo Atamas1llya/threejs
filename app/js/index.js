@@ -5,17 +5,32 @@ import Renderer from './Renderer';
 import User from './entities/User';
 import Block from './entities/Block';
 
-import map from './maps/simple';
+import map from './maps/advanced';
 
 import { createCube, createLight } from './utils/objects';
 
-// const cube = createCube(1, 1, 1, 'red');
-// const cube2 = createCube(1, 1, 1, 'blue');
-
-const light = createLight(2000, 1000, 1000);
+const light = createLight({
+  position: {
+    x: 5,
+    y: 15,
+    z: 10,
+  },
+  intensivity: 1.2,
+  range: 25,
+});
+const lightBlock = new Block({
+  position: {
+    x: 5,
+    y: 4,
+    z: 10,
+  },
+  height: 0,
+  color: '#212121',
+})
 
 Renderer.render();
 Renderer.renderElement(light);
+Renderer.renderElement(lightBlock.entity);
 
 for (let i = 0; i < map.length; i++) {
   for (let j = 0; j < map[i].length; j++) {
@@ -26,7 +41,7 @@ for (let i = 0; i < map.length; i++) {
         z: j,
       },
       height: map[i][j],
-      color: '#212121',
+      color: 'green',
     })
     Renderer.renderElement(block.entity);
   }

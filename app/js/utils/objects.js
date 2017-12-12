@@ -6,14 +6,12 @@ export const createBall = size => new THREE.Mesh(
 );
 
 
-export const createLight = (x, y, z) => {
-  const light = new THREE.PointLight('white');
-
-  light.position.x = x;
-  light.position.y = y;
-  light.position.z = z;
-  light.intensity = 2.9;
-  light.distance = 10000;
+export const createLight = ({ position, intensivity = 1, range = 18 }) => {
+  const light = new THREE.PointLight('white', intensivity, range);
+  light.position.set(position.x, position.y, position.z);
+  light.castShadow = true;
+  light.shadow.camera.near = 0.1;
+  light.shadow.camera.far = 25;
 
   return light;
 }

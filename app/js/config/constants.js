@@ -12,4 +12,6 @@ module.exports = {
   BUTTON_TOP_W: 87,
   BUTTON_DOWN: 40,
   BUTTON_DOWN_S: 83,
+  BUTTON_SPACE: 32,
+  BUTTON_SHIFT: 16,
 }
