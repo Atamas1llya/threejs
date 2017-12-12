@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import lock from 'pointer-lock';
 
-import constants, { ROOT } from './constants';
+import constants, { ROOT } from '../config/constants';
+import config from '../config/user';
 
 class User {
   constructor({ x, y, z }) {
@@ -40,6 +41,6 @@ class User {
 
 export default new User({
   x: 0,
-  y: 0,
+  y: config.height,
   z: 10,
-});
+})

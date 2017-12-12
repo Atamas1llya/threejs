@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import constants from './constants';
+import constants from './config/constants';
 
-import User from './User';
+import User from './entities/User';
 
 class Renderer {
   constructor() {
