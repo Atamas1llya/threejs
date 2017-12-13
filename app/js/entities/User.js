@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import CANNON from 'cannon';
 import lock from 'pointer-lock';
 
 export default class User {
@@ -11,15 +12,8 @@ export default class User {
     this.camera.position.set(x, y, z);
     this.camera.rotation.order = 'YXZ'; // default is 'XYZ'
 
-    this.movement = {
-      forward: false,
-      back: false,
-      left: false,
-      right: false,
-      top: false,
-      bottom: false,
-    }
-
+    this.movement = {}
+    this._initializePhysics(position, permissions);
     this._initializeControls();
 
     this.pointer = lock(document.body);
@@ -61,6 +55,32 @@ export default class User {
 
       }
     }
+  }
+
+  _initializePhysics = (position, permissions) => {
+    const [x, y, z] = position;
+
+    const geometry = new THREE.CubeGeometry(1, 2, 1);
+    const material = new THREE.MeshLambertMaterial({ color: 'red' });
+
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+
+    const boxShape = new CANNON.Box(new CANNON.Vec3(0.5,1,0.5));
+    const boxBody = new CANNON.Body({ mass: 0 });
+
+    boxBody.position.set(x, y, z);
+    boxBody.addShape(boxShape);
+
+    this.physic = boxBody;
+    this.mesh = mesh;
+  }
+
+  updatePosition = () => {
+    // console.log(this.physic.position);
+    this.physic.position.copy(this.camera.position);
+    this.mesh.position.copy(this.physic.position);
+    this.mesh.quaternion.copy(this.physic.quaternion);
   }
 
   _initializeControls = () => {

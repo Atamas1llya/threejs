@@ -25,6 +25,7 @@ renderer.init(document.querySelector('#root'));
 renderer.render3dMap(map3d);
 renderer.renderElement(new THREE.HemisphereLight(0xffffbb, 0x080820, 1)); // add ambient light
 renderer.renderElement(new THREE.DirectionalLight(0xffffff, 0.2)) // sun... sun?
+renderer.renderUser(user);
 
 
 // dev

@@ -40,7 +40,12 @@ export default class Renderer {
 
   renderElement = element => {
     this.scene.add(element);
-  };
+  }
+
+  renderUser = (user) => {
+    this.world.add(user.physic);
+    this.scene.add(user.mesh);
+  }
 
 
   renderMap = (map) => {
@@ -82,6 +87,7 @@ export default class Renderer {
   _updatePhysics = () => {
     this.world.step(1/60);
     this.elements.forEach(element => element.updatePosition());
+    this.user.updatePosition();
   }
 
 
