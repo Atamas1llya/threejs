@@ -1,5 +1,10 @@
 import * as THREE from 'three';
 import CANNON from 'cannon';
+import Stats from 'stats.js';
+
+var stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild( stats.dom );
 
 import Renderer from './engine/Renderer';
 import Player from './entities/Player';
@@ -8,7 +13,7 @@ class Game {
   constructor() {
     this.renderer = new Renderer();
     this.player = new Player({
-      position: [0, 0, 0]
+      position: [0, 50, 800],
     });
   }
 
@@ -25,9 +30,11 @@ class Game {
   }
 
   tick = () => { // game loop
+    stats.begin();
     requestAnimationFrame(this.tick);
 
     this.renderer.tick(this.player)
+    stats.end();
   }
 
   _resize = () => {

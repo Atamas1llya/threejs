@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "diamond-square": "^1.0.0",
     "normalize.css": "^7.0.0",
     "pointer-lock": "0.0.4",
+    "simple-terrain": "^1.0.0",
     "stats.js": "^0.17.0",
     "three": "^0.88.0",
     "webpack": "^3.10.0"
