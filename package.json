@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cannon": "^0.6.2",
     "normalize.css": "^7.0.0",
     "pointer-lock": "0.0.4",
+    "pushstate-server": "^3.0.1",
     "three": "^0.88.0",
     "webpack": "^3.10.0"
   },
