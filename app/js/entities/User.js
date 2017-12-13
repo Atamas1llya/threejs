@@ -58,7 +58,7 @@ export default class User {
       if (this.permissions.fly) {
         this.camera.position.y -= 0.2;
       } else {
-        
+
       }
     }
   }
@@ -96,13 +96,13 @@ export default class User {
 
     movements.on('data', (move) => {
       initial.x += move.dx;
-      initial.y += move.dy;
-
-      // this.camera.position.x = initial.x;
-      // this.camera.position.y = initial.y;
+      if (initial.y + move.dy < 90 && initial.y + move.dy > -90) {
+        initial.y += move.dy;
+      }
 
       this.camera.rotation.y = -(initial.x * Math.PI / 180);
       this.camera.rotation.x = -(initial.y * Math.PI / 180);
+
       this.camera.updateProjectionMatrix();
     })
   }
