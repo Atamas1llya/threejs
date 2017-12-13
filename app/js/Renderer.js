@@ -20,7 +20,7 @@ export default class Renderer {
     this.renderer.setClearColor('#212121', 1);
 
     const world = new CANNON.World();
-    world.gravity.set(0,-9.81, 0);
+    world.gravity.set(0,-18, 0);
     world.broadphase = new CANNON.NaiveBroadphase();
     world.solver.iterations = 10;
     this.world = world;
