@@ -1,3 +1,3 @@
 module.exports = {
-  height: 2,
+  height: 0.6,
 }
