@@ -48,7 +48,7 @@ export default class Renderer {
       frequency: 1,
       heightmap: THREE.Terrain.PerlinDiamond,
       material: material,
-      maxHeight: 100,
+      maxHeight: 50,
       minHeight: -100,
       steps: 1,
       useBufferGeometry: false,
@@ -59,11 +59,9 @@ export default class Renderer {
     });
 
     console.log(terrainScene.children[0]);
+
     terrainScene.children[0].receiveShadow = true;
-    terrainScene.children[0].castShadow = true;
-
-    terrainScene.receiveShadow = true;
-
+    terrainScene.children[0].castShadow = false;
 
     this.scene.add(terrainScene);
   }
