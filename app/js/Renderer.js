@@ -1,4 +1,15 @@
 import * as THREE from 'three';
+import Stats from 'stats-js';
+
+var stats = new Stats();
+stats.setMode(0); // 0: fps, 1: ms
+
+// Align top-left
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.left = '0px';
+stats.domElement.style.top = '0px';
+
+document.body.appendChild(stats.domElement);
 
 export default class Renderer {
   constructor({ user }) {
@@ -12,71 +23,52 @@ export default class Renderer {
       alpha: true,
       antialias: true,
     });
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     this.scene.fog = new THREE.Fog(0x222233, 0, 20000);
     this.renderer.setClearColor('#212121', 1);
 
     window.addEventListener('resize', this._resize);
-
-
-
-    this.createTexture({
-      size: [30, 30, 30],
-      rotation: [90, 0, 0],
-      position: [0, 0, 0],
-    })
-
-    this.createTexture({
-      size: [30, 30, 30],
-      rotation: [90, 0, 0],
-      position: [0, 8, 0],
-    })
-
-    this.createTexture({
-      size: [8, 30, 30],
-      rotation: [90, 90, 0],
-      position: [15, 4, 0],
-    })
-
-    this.createTexture({
-      size: [30, 8, 30],
-      rotation: [0, 0, 0],
-      position: [0, 4, 15],
-    })
-
-    this.createTexture({
-      size: [8, 30, 30],
-      rotation: [90, 90, 0],
-      position: [-15, 4, 0],
-    })
-
-    this.createTexture({
-      size: [30, 8, 30],
-      rotation: [0, 0, 0],
-      position: [0, 4, -15],
-    })
   }
 
+  renderMap = () => {
+    const material = new THREE.MeshLambertMaterial({color: 0x5566aa});
 
-  createTexture = ({ size, position, rotation }) => {
-    rotation = rotation.map(e => (e * Math.PI) / 180)
+    const textureObject = new THREE.TextureLoader().load('./textures/grass.jpg');
+    textureObject.wrapS = THREE.RepeatWrapping;
+    textureObject.wrapT = THREE.RepeatWrapping;
+    textureObject.repeat.set(128, 128);
 
-    console.log(rotation);
-    const plane = new THREE.Mesh(
-      new THREE.PlaneGeometry(...size),
-      new THREE.MeshBasicMaterial({
-        color: 0xffff00,
-        side: THREE.DoubleSide,
-        wireframe: true,
-      })
-    );
+    material.map = textureObject;
+    // material.wireframe = true;
 
-    plane.position.set(...position);
-    plane.rotation.set(...rotation);
+    const terrainScene = THREE.Terrain({
+      easing: THREE.Terrain.Linear,
+      frequency: 1,
+      heightmap: THREE.Terrain.PerlinDiamond,
+      material: material,
+      maxHeight: 100,
+      minHeight: -100,
+      steps: 1,
+      useBufferGeometry: false,
+      xSegments: 63,
+      xSize: 1024,
+      ySegments: 63,
+      ySize: 1024,
+    });
 
-    this.scene.add(plane);
+    console.log(terrainScene.children[0]);
+    terrainScene.children[0].receiveShadow = true;
+    terrainScene.children[0].castShadow = true;
+
+    terrainScene.receiveShadow = true;
+
+
+    this.scene.add(terrainScene);
   }
 
+  renderElement = element => this.scene.add(element);
 
   init = (element) => {
     element.appendChild(this.renderer.domElement);
@@ -84,14 +76,20 @@ export default class Renderer {
 
     this._resize();
     this._animate();
+
+    // this.renderMap();
   }
 
   _animate = () => {
+    stats.begin();
+
     requestAnimationFrame(this._animate);
 
     this.user.animateMovementTick();
 
     this.renderer.render(this.scene, this.user.camera);
+
+     stats.end();
   }
 
 
