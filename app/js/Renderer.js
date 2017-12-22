@@ -26,8 +26,8 @@ export default class Renderer {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    this.scene.fog = new THREE.Fog(0x222233, 0, 900);
-    this.renderer.setClearColor('#87CEFA', 1);
+    this.scene.fog = new THREE.Fog(0x87CEFA, 0, 400);
+    this.renderer.setClearColor(0x87CEFA, 1);
 
     window.addEventListener('resize', this._resize);
   }
