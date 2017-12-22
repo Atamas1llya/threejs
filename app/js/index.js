@@ -18,10 +18,10 @@ const user = new User({
 const renderer = new Renderer({ user });
 
 renderer.init(document.querySelector('#root'));
-renderer.renderElement(new THREE.HemisphereLight(0xffffbb, 0x080820, 1));
+renderer.renderElement(new THREE.HemisphereLight(0xffffbb, 0x080820, 1.2));
 // renderer.renderElement(new THREE.AmbientLight('white'))
 
-const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+const sun = new THREE.DirectionalLight(0xffffff, 1.5);
 sun.position.set(1, 1, 5);
 sun.castShadow = true;
 sun.shadow.mapSize.width = 1024 * 4;
@@ -38,7 +38,6 @@ cube.position.set(1, 1, 1)
 renderer.renderElement(cube)
 
 renderer.renderMap();
-
 
 
 // dev

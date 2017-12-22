@@ -26,8 +26,8 @@ export default class Renderer {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    this.scene.fog = new THREE.Fog(0x222233, 0, 20000);
-    this.renderer.setClearColor('#212121', 1);
+    this.scene.fog = new THREE.Fog(0x222233, 0, 900);
+    this.renderer.setClearColor('#87CEFA', 1);
 
     window.addEventListener('resize', this._resize);
   }
@@ -35,10 +35,10 @@ export default class Renderer {
   renderMap = () => {
     const material = new THREE.MeshLambertMaterial({color: 0x5566aa});
 
-    const textureObject = new THREE.TextureLoader().load('./textures/grass.jpg');
+    const textureObject = new THREE.TextureLoader().load('./textures/grass3.jpg');
     textureObject.wrapS = THREE.RepeatWrapping;
     textureObject.wrapT = THREE.RepeatWrapping;
-    textureObject.repeat.set(128, 128);
+    textureObject.repeat.set(128 * 3, 128 * 3);
 
     material.map = textureObject;
     // material.wireframe = true;
@@ -48,8 +48,8 @@ export default class Renderer {
       frequency: 1,
       heightmap: THREE.Terrain.PerlinDiamond,
       material: material,
-      maxHeight: 50,
-      minHeight: -100,
+      maxHeight: 60,
+      minHeight: -60,
       steps: 1,
       useBufferGeometry: false,
       xSegments: 63,
