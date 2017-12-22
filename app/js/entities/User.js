@@ -17,6 +17,11 @@ export default class User {
 
     this.pointer = lock(document.body);
     this.pointer.on('attain', this._setupPointer);
+
+    this.stepState = 20;
+    this.stepSize = 9;
+    this.stepRange = 0.5 / 100;
+    this.toggled = true;
   }
 
   animateMovementTick = () => {
@@ -38,6 +43,34 @@ export default class User {
       this.camera.position.x -= Math.sin(this.camera.rotation.y - Math.PI / 2) * 0.1;
       this.camera.position.z -= Math.cos(this.camera.rotation.y - Math.PI / 2) * 0.1;
     }
+
+    if (movement.forward || movement.back || movement.left || movement.right) {
+      if (this.stepState <= this.stepSize) {
+        this.camera.position.y += this.stepRange;
+        this.camera.rotation.y += this.stepRange * Math.PI / 180;
+        if (this.toggled) {
+          this.camera.position.x += this.stepRange;
+        } else {
+          this.camera.position.x -= this.stepRange;
+        }
+      }
+      else if (this.stepState <= this.stepSize * 2) {
+        this.camera.position.y -= this.stepRange;
+        this.camera.rotation.y -= this.stepRange * Math.PI / 180;
+        if (this.toggled) {
+          this.camera.position.x += this.stepRange;
+        } else {
+          this.camera.position.x -= this.stepRange;
+        }
+      }
+      else {
+        this.stepState = 0;
+        this.toggled = !this.toggled;
+      }
+
+      this.stepState += 1;
+    }
+
     if (movement.top) {
       if (this.permissions.fly) {
         this.camera.position.y += 0.2
