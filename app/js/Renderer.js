@@ -32,40 +32,6 @@ export default class Renderer {
     window.addEventListener('resize', this._resize);
   }
 
-  renderMap = () => {
-    const material = new THREE.MeshLambertMaterial({color: 0x5566aa});
-
-    const textureObject = new THREE.TextureLoader().load('./textures/grass3.jpg');
-    textureObject.wrapS = THREE.RepeatWrapping;
-    textureObject.wrapT = THREE.RepeatWrapping;
-    textureObject.repeat.set(128 * 3, 128 * 3);
-
-    material.map = textureObject;
-    // material.wireframe = true;
-
-    const terrainScene = THREE.Terrain({
-      easing: THREE.Terrain.Linear,
-      frequency: 1,
-      heightmap: THREE.Terrain.PerlinDiamond,
-      material: material,
-      maxHeight: 60,
-      minHeight: -60,
-      steps: 1,
-      useBufferGeometry: false,
-      xSegments: 63,
-      xSize: 1024,
-      ySegments: 63,
-      ySize: 1024,
-    });
-
-    console.log(terrainScene.children[0]);
-
-    terrainScene.children[0].receiveShadow = true;
-    terrainScene.children[0].castShadow = false;
-
-    this.scene.add(terrainScene);
-  }
-
   renderElement = element => this.scene.add(element);
 
   init = (element) => {
