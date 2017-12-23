@@ -1,13 +1,13 @@
 import 'normalize.css';
+import '../css/index.css'
+
 import * as THREE from 'three';
 
-import Renderer from './Renderer';
+import Renderer from './engine/Renderer';
 import User from './entities/User';
+import Sun from './entities/Sun';
 
-import userConfig from './config/user';
-import './plugins/Terrain';
-
-import '../css/index.css'
+import objectCreator from './utils/objectGenerator';
 
 const user = new User({
   position: [0, 2, 20],
@@ -15,54 +15,46 @@ const user = new User({
     fly: true,
   }
 });
+
 const renderer = new Renderer({ user });
-
-
-// init
 renderer.init(document.querySelector('#root'));
 renderer.renderElement(new THREE.HemisphereLight(0xffffbb, 0x080820, 0.2));
 renderer.renderElement(new THREE.AmbientLight( 0x808080 ));
 
-
 // render sun
-const sun = new THREE.DirectionalLight(0xffffff, 0.8);
-sun.position.set(1, 1.5, 1.5);
-sun.castShadow = true;
-sun.shadow.mapSize.width = 1024 * 4;
-sun.shadow.mapSize.height = 1024 * 4;
-renderer.renderElement(sun); // sun... sun?
+const sun = new Sun({
+  time: 1000,
+  mapSize: {
+    width: 1024 * 4,
+    height: 1024 * 4,
+  }
+})
 
 
-
-// render cube
-const cube = new THREE.Mesh(
-  new THREE.BoxGeometry(1, 1, 1),
-  new THREE.MeshLambertMaterial({ color: 'yellow' }),
-);
-cube.castShadow = true;
-cube.position.set(0, 0, 0);
-renderer.renderElement(cube);
+renderer.renderElement(sun.entity);
 
 
+const ground = objectCreator({
+  geometry: new THREE.PlaneGeometry(1024, 1024, 1024),
+  material: new THREE.MeshLambertMaterial({ side: THREE.DoubleSide }),
+  textureUrl: './textures/grass3.jpg',
+  rotation: [90, 0, 0],
+  position: [0, -0.501, 0],
+  params: {
+    receiveShadow: true,
+  },
+})
 
-// render simple ground
-
-const material = new THREE.MeshLambertMaterial({ side: THREE.DoubleSide })
-const textureObject = new THREE.TextureLoader().load('./textures/grass3.jpg');
-textureObject.wrapS = THREE.RepeatWrapping;
-textureObject.wrapT = THREE.RepeatWrapping;
-textureObject.repeat.set(1024, 1024);
-material.map = textureObject;
-
-const ground = new THREE.Mesh(
-  new THREE.PlaneGeometry(1024, 1024, 1024),
-  material,
-);
-ground.rotation.x = 90 * (Math.PI / 180);
-ground.position.set(0, -0.501, 0);
-ground.receiveShadow = true;
+const cube = objectCreator({
+  geometry: new THREE.BoxGeometry(1, 1, 1),
+  material: new THREE.MeshLambertMaterial({ color: 'yellow' }),
+  params: {
+    castShadow: true,
+  }
+})
 
 renderer.renderElement(ground);
+renderer.renderElement(cube);
 
 
 // dev
