@@ -5,8 +5,11 @@ import config from '../config/user';
 import controlsMixin from '../mixins/controls';
 import Cube from './Cube';
 
-class User {
+import Player from './Player';
+
+class User extends Player {
   constructor({ position, permissions }) {
+    super();
     this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
 
     this.permissions = permissions || {};
@@ -22,20 +25,14 @@ class User {
     this.stepRange = 0.5 / 100;
     this.toggled = true;
 
-    const cubeShape = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5));
-    this.body = new CANNON.Body({
-      mass: 1,
-      shape: cubeShape,
-    });
     this.body.position.set(...position);
   }
 
   updatePosition = () => {
+    this.updatePhysic();
+
+
     this.camera.position.copy(this.body.position);
-    // this.camera.quaternion.copy(this.body.quaternion);
-    this.body.quaternion.x = 0;
-    this.body.quaternion.y = 0;
-    this.body.quaternion.z = 0;
     this.camera.position.y = this.body.position.y + 1;
   }
 }

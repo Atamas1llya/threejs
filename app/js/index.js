@@ -5,7 +5,10 @@ import * as THREE from 'three';
 import CANNON from 'cannon';
 
 import Renderer from './engine/Renderer';
+
 import User from './entities/User';
+import Player from './entities/Player';
+
 import Sun from './entities/Sun';
 import Cube from './entities/Cube';
 
@@ -17,7 +20,6 @@ const user = new User({
     fly: true,
   }
 });
-
 
 const sun = new Sun({
   time: 1000,
@@ -66,6 +68,11 @@ groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
 groundBody.position.set(0, -0.5, 0)
 
 renderer.renderPhysic(groundBody);
+
+const anotherPlayer = new Player();
+anotherPlayer.body.position.set(5, 5, 5);
+
+renderer.renderPlayer(anotherPlayer);
 
 
 // dev

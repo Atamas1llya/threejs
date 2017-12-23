@@ -50,14 +50,14 @@ module.exports = {
 
     if (movement.top) {
       if (this.permissions.fly) {
-        this.body.velocity.y += 0.5;
+        this.body.velocity.y += 1;
       } else {
         // this.body.velocity.y = 5;
       }
     }
     if (movement.bottom) {
       if (this.permissions.fly) {
-        this.body.velocity.y -= 0.5;
+        this.body.velocity.y -= 1;
       } else {
 
       }
@@ -76,8 +76,8 @@ module.exports = {
         case 83: movement.back = true; break;
         case 65: movement.left = true; break;
         case 68: movement.right = true; break;
-        case 32: movement.top = true; break;
-        case 16: movement.bottom = true; break;
+        case 32: this.body.velocity.y += 8; break;
+        case 16: this.body.velocity.y -= 8; break;
       }
       this.movement = movement;
     })
@@ -89,8 +89,6 @@ module.exports = {
         case 83: movement.back = false; break;
         case 65: movement.left = false; break;
         case 68: movement.right = false; break;
-        case 32: movement.top = false; break;
-        case 16: movement.bottom = false; break;
       }
       this.movement = movement;
     })

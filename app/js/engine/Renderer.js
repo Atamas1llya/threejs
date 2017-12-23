@@ -14,7 +14,6 @@ stats.domElement.style.top = '0px';
 document.body.appendChild(stats.domElement);
 
 
-
 export default class Renderer {
   constructor({ user, sun }) {
     this.user = user;
@@ -33,10 +32,11 @@ export default class Renderer {
     this.renderer.setClearColor(0x87CEFA, 1);
 
     this.world = new CANNON.World();
-    this.world.gravity.set(0, -9.8, 0);
+    this.world.gravity.set(0, -20, 0);
     this.world.broadphase = new CANNON.NaiveBroadphase();
 
     this.objects = [];
+    this.players = [];
 
     window.addEventListener('resize', this._resize);
   }
@@ -60,6 +60,13 @@ export default class Renderer {
     this.objects.push(object);
   }
 
+  renderPlayer = (player) => {
+    this.players.push(player);
+
+    this.scene.add(player.mesh);
+    this.world.add(player.body);
+  }
+
 
   // game loop
   _animate = () => {
@@ -71,6 +78,12 @@ export default class Renderer {
     for (var i = 0; i < this.objects.length; i++) {
       this.objects[i].updatePosition();
     }
+
+    for (var i = 0; i < this.players.length; i++) {
+      this.players[i].updatePhysic();
+      this.players[i].body.position.x += 0.01;
+    }
+
     this.user.animateMovementTick();
     this.user.updatePosition();
     this.renderer.render(this.scene, this.user.camera);
