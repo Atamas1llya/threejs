@@ -5,39 +5,39 @@ module.exports = {
     const { movement } = this;
 
     if (movement.forward) {
-      this.camera.position.x -= Math.sin(this.camera.rotation.y) * 0.1;
-      this.camera.position.z -= Math.cos(this.camera.rotation.y) * 0.1;
+      this.body.position.x -= Math.sin(this.camera.rotation.y) * 0.1;
+      this.body.position.z -= Math.cos(this.camera.rotation.y) * 0.1;
     }
     if (movement.back) {
-      this.camera.position.x += Math.sin(this.camera.rotation.y) * 0.1;
-      this.camera.position.z += Math.cos(this.camera.rotation.y) * 0.1;
+      this.body.position.x += Math.sin(this.camera.rotation.y) * 0.1;
+      this.body.position.z += Math.cos(this.camera.rotation.y) * 0.1;
     }
     if (movement.left) {
-      this.camera.position.x += Math.sin(this.camera.rotation.y - Math.PI / 2) * 0.1;
-      this.camera.position.z += Math.cos(this.camera.rotation.y - Math.PI / 2) * 0.1;
+      this.body.position.x += Math.sin(this.camera.rotation.y - Math.PI / 2) * 0.1;
+      this.body.position.z += Math.cos(this.camera.rotation.y - Math.PI / 2) * 0.1;
     }
     if (movement.right) {
-      this.camera.position.x -= Math.sin(this.camera.rotation.y - Math.PI / 2) * 0.1;
-      this.camera.position.z -= Math.cos(this.camera.rotation.y - Math.PI / 2) * 0.1;
+      this.body.position.x -= Math.sin(this.camera.rotation.y - Math.PI / 2) * 0.1;
+      this.body.position.z -= Math.cos(this.camera.rotation.y - Math.PI / 2) * 0.1;
     }
 
     if (movement.forward || movement.back || movement.left || movement.right) {
       if (this.stepState <= this.stepSize) {
-        this.camera.position.y += this.stepRange;
+        this.body.position.y += this.stepRange;
         this.camera.rotation.y += this.stepRange * Math.PI / 180;
         if (this.toggled) {
-          this.camera.position.x += this.stepRange;
+          this.body.position.x += this.stepRange;
         } else {
-          this.camera.position.x -= this.stepRange;
+          this.body.position.x -= this.stepRange;
         }
       }
       else if (this.stepState <= this.stepSize * 2) {
-        this.camera.position.y -= this.stepRange;
+        this.body.position.y -= this.stepRange;
         this.camera.rotation.y -= this.stepRange * Math.PI / 180;
         if (this.toggled) {
-          this.camera.position.x += this.stepRange;
+          this.body.position.x += this.stepRange;
         } else {
-          this.camera.position.x -= this.stepRange;
+          this.body.position.x -= this.stepRange;
         }
       }
       else {
@@ -50,14 +50,14 @@ module.exports = {
 
     if (movement.top) {
       if (this.permissions.fly) {
-        this.camera.position.y += 0.2
+        this.body.velocity.y += 0.5;
       } else {
-        this.camera.velocity.y = 5;
+        // this.body.velocity.y = 5;
       }
     }
     if (movement.bottom) {
       if (this.permissions.fly) {
-        this.camera.position.y -= 0.2;
+        this.body.velocity.y -= 0.5;
       } else {
 
       }

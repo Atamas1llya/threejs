@@ -16,8 +16,9 @@ document.body.appendChild(stats.domElement);
 
 
 export default class Renderer {
-  constructor({ user }) {
+  constructor({ user, sun }) {
     this.user = user;
+    this.sun = sun;
 
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.Fog(0x87CEFA, 0, 400);
@@ -42,6 +43,8 @@ export default class Renderer {
 
   init = (container) => {
     container.appendChild(this.renderer.domElement);
+    this.renderElement(this.sun.entity);
+    this.renderPhysic(this.user.body);
 
     this._resize();
     this._animate();
@@ -69,6 +72,7 @@ export default class Renderer {
       this.objects[i].updatePosition();
     }
     this.user.animateMovementTick();
+    this.user.updatePosition();
     this.renderer.render(this.scene, this.user.camera);
 
      stats.end();

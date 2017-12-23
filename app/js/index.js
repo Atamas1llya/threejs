@@ -12,18 +12,13 @@ import Cube from './entities/Cube';
 import objectCreator from './utils/objectGenerator';
 
 const user = new User({
-  position: [1, 30, 40],
+  position: [1, 1, 1],
   permissions: {
     fly: true,
   }
 });
 
-const renderer = new Renderer({ user });
-renderer.init(document.querySelector('#root'));
-renderer.renderElement(new THREE.HemisphereLight(0xffffbb, 0x080820, 0.2));
-renderer.renderElement(new THREE.AmbientLight( 0x808080 ));
 
-// render sun
 const sun = new Sun({
   time: 1000,
   mapSize: {
@@ -31,7 +26,13 @@ const sun = new Sun({
     height: 1024 * 4,
   }
 })
-renderer.renderElement(sun.entity);
+
+
+const renderer = new Renderer({ user, sun });
+renderer.init(document.querySelector('#root'));
+renderer.renderElement(new THREE.HemisphereLight(0xffffbb, 0x080820, 0.2));
+renderer.renderElement(new THREE.AmbientLight( 0x808080 ));
+
 
 
 for (var i = 0; i < 10; i++) {

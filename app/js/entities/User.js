@@ -1,7 +1,9 @@
 import * as THREE from 'three';
+import CANNON from 'cannon';
 import config from '../config/user';
 
 import controlsMixin from '../mixins/controls';
+import Cube from './Cube';
 
 class User {
   constructor({ position, permissions }) {
@@ -19,6 +21,22 @@ class User {
     this.stepSize = 9;
     this.stepRange = 0.5 / 100;
     this.toggled = true;
+
+    const cubeShape = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5));
+    this.body = new CANNON.Body({
+      mass: 1,
+      shape: cubeShape,
+    });
+    this.body.position.set(...position);
+  }
+
+  updatePosition = () => {
+    this.camera.position.copy(this.body.position);
+    // this.camera.quaternion.copy(this.body.quaternion);
+    this.body.quaternion.x = 0;
+    this.body.quaternion.y = 0;
+    this.body.quaternion.z = 0;
+    this.camera.position.y = this.body.position.y + 1;
   }
 }
 
