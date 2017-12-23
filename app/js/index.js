@@ -2,15 +2,17 @@ import 'normalize.css';
 import '../css/index.css'
 
 import * as THREE from 'three';
+import CANNON from 'cannon';
 
 import Renderer from './engine/Renderer';
 import User from './entities/User';
 import Sun from './entities/Sun';
+import Cube from './entities/Cube';
 
 import objectCreator from './utils/objectGenerator';
 
 const user = new User({
-  position: [0, 2, 20],
+  position: [1, 30, 40],
   permissions: {
     fly: true,
   }
@@ -29,10 +31,18 @@ const sun = new Sun({
     height: 1024 * 4,
   }
 })
-
-
 renderer.renderElement(sun.entity);
 
+
+for (var i = 0; i < 10; i++) {
+  const cube = new Cube({
+    size: [1, 1, 1],
+    position: [1, 0, i],
+    color: 'red',
+    mass: 0,
+  })
+  renderer.renderObject(cube)
+}
 
 const ground = objectCreator({
   geometry: new THREE.PlaneGeometry(1024, 1024, 1024),
@@ -44,17 +54,17 @@ const ground = objectCreator({
     receiveShadow: true,
   },
 })
-
-const cube = objectCreator({
-  geometry: new THREE.BoxGeometry(1, 1, 1),
-  material: new THREE.MeshLambertMaterial({ color: 'yellow' }),
-  params: {
-    castShadow: true,
-  }
-})
-
 renderer.renderElement(ground);
-renderer.renderElement(cube);
+
+const groundShape = new CANNON.Plane();
+const groundBody = new CANNON.Body({
+  mass: 0,
+  shape: groundShape,
+});
+groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
+groundBody.position.set(0, -0.5, 0)
+
+renderer.renderPhysic(groundBody);
 
 
 // dev

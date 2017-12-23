@@ -1,6 +1,7 @@
 import * as THREE from 'three';
-import Stats from 'stats-js';
+import CANNON from 'cannon';
 
+import Stats from 'stats-js';
 
 
 var stats = new Stats();
@@ -30,6 +31,12 @@ export default class Renderer {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.setClearColor(0x87CEFA, 1);
 
+    this.world = new CANNON.World();
+    this.world.gravity.set(0, -9.8, 0);
+    this.world.broadphase = new CANNON.NaiveBroadphase();
+
+    this.objects = [];
+
     window.addEventListener('resize', this._resize);
   }
 
@@ -40,17 +47,27 @@ export default class Renderer {
     this._animate();
   }
 
-
-
   renderElement = element => this.scene.add(element);
+
+  renderPhysic = element => this.world.add(element);
+
+  renderObject = (object) => {
+    this.scene.add(object.mesh);
+    this.world.add(object.body);
+    this.objects.push(object);
+  }
 
 
   // game loop
   _animate = () => {
     stats.begin();
 
+    this.world.step(1/60);
     requestAnimationFrame(this._animate);
 
+    for (var i = 0; i < this.objects.length; i++) {
+      this.objects[i].updatePosition();
+    }
     this.user.animateMovementTick();
     this.renderer.render(this.scene, this.user.camera);
 
