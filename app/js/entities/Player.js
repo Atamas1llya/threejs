@@ -14,20 +14,27 @@ export default class Player {
     });
 
     const shape = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5));
+    const material = new CANNON.Material();
+    material.friction = 0;
+
     this.body = new CANNON.Body({
       mass: 10,
       shape: shape,
+      material: material,
     });
     this.body.linearDamping = 0;
     this.body.angularDumping = 0;
   }
 
-  updatePhysic = () => {
+  updatePosition = () => {
     this.body.angularVelocity.set(0, 0, 0);
+    this.body.velocity.set(0, this.body.velocity.y, 0);
+    this.body.quaternion.setFromAxisAngle(new CANNON.Vec3(0,1,0), this.mesh.rotation.y);
 
-    this.body.velocity.x = 0;
-    this.body.velocity.z = 0;
-    
-    this.mesh.position.copy(this.body.position)
+    this.mesh.position.copy(this.body.position);
+
+    if (this.updateCameraPosition) {
+      this.updateCameraPosition();
+    }
   }
 }

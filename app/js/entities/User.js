@@ -8,13 +8,12 @@ import Cube from './Cube';
 import Player from './Player';
 
 class User extends Player {
-  constructor({ position, permissions }) {
-    super();
+  constructor(props) {
+    super(props);
+
     this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
 
-    this.permissions = permissions || {};
-
-    const [x, y, z] = position;
+    const [x, y, z] = props.position;
     this.camera.position.set(x, y, z);
     this.camera.rotation.order = 'YXZ'; // default is 'XYZ'
 
@@ -24,15 +23,10 @@ class User extends Player {
     this.stepSize = 9;
     this.stepRange = 0.5 / 100;
     this.toggled = true;
-
-    this.body.position.set(...position);
   }
 
-  updatePosition = () => {
-    this.updatePhysic();
-
-
-    this.camera.position.copy(this.body.position);
+  updateCameraPosition = () => {
+    this.camera.position.copy(this.mesh.position);
     this.camera.position.y = this.body.position.y + 1;
   }
 }

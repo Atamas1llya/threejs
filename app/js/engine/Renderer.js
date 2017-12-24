@@ -60,14 +60,6 @@ export default class Renderer {
     this.objects.push(object);
   }
 
-  renderPlayer = (player) => {
-    this.players.push(player);
-
-    this.scene.add(player.mesh);
-    this.world.add(player.body);
-  }
-
-
   // game loop
   _animate = () => {
     stats.begin();

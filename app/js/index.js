@@ -72,7 +72,7 @@ renderer.renderPhysic(groundBody);
 const anotherPlayer = new Player();
 anotherPlayer.body.position.set(5, 5, 5);
 
-renderer.renderPlayer(anotherPlayer);
+renderer.renderObject(anotherPlayer);
 
 
 // dev
