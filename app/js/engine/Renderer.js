@@ -60,6 +60,12 @@ export default class Renderer {
     this.objects.push(object);
   }
 
+  removeObjectById = (_id) => {
+    const body = this.objects.find(e => e._id === _id);
+    this.world.remove(body.body);
+    this.scene.remove(body.mesh)
+  }
+
   // game loop
   _animate = () => {
     stats.begin();

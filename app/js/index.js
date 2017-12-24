@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import CANNON from 'cannon';
 
 import Renderer from './engine/Renderer';
+import Syncer from './engine/Syncer';
 
 import User from './entities/User';
 import Player from './entities/Player';
@@ -31,11 +32,12 @@ const sun = new Sun({
 
 
 const renderer = new Renderer({ user, sun });
+
 renderer.init(document.querySelector('#root'));
 renderer.renderElement(new THREE.HemisphereLight(0xffffbb, 0x080820, 0.2));
 renderer.renderElement(new THREE.AmbientLight( 0x808080 ));
 
-
+const syncer = new Syncer(renderer);
 
 for (var i = 0; i < 10; i++) {
   const cube = new Cube({
@@ -72,11 +74,6 @@ groundBody.position.set(0, -0.5, 0)
 
 renderer.renderPhysic(groundBody);
 
-const anotherPlayer = new Player();
-anotherPlayer.body.position.set(5, 5, 5);
-
-renderer.renderObject(anotherPlayer);
-
-
+syncer.sync();
 // dev
 window.renderer = renderer;
