@@ -60,9 +60,12 @@ const ground = objectCreator({
 renderer.renderElement(ground);
 
 const groundShape = new CANNON.Plane();
+const groundMaterial = new CANNON.Material();
+groundMaterial.friction = 0;
 const groundBody = new CANNON.Body({
   mass: 0,
   shape: groundShape,
+  material: groundMaterial,
 });
 groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
 groundBody.position.set(0, -0.5, 0)

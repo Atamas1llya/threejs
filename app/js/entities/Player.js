@@ -29,7 +29,7 @@ export default class Player {
   updatePosition = () => {
     this.body.angularVelocity.set(0, 0, 0);
     this.body.velocity.set(0, this.body.velocity.y, 0);
-    this.body.quaternion.setFromAxisAngle(new CANNON.Vec3(0,1,0), this.mesh.rotation.y);
+    this.body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), this.mesh.rotation.y);
 
     this.mesh.position.copy(this.body.position);
 
