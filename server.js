@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
 
   setInterval(() => {
     socket.emit('user_positions', filterObject(users, [`!${user._id}`]));
-  }, 1000/30);
+  }, 1000/60);
 });
 
 http.listen(3000, () => {
