@@ -1,86 +1,37 @@
 import 'normalize.css';
-import '../css/index.css'
+import '../css/index.css';
 
+// dependencies
 import * as THREE from 'three';
-import CANNON from 'cannon';
 
+// engine
 import Renderer from './engine/Renderer';
-import Syncer from './engine/Syncer';
 
-import User from './entities/User';
+// entities
 import Player from './entities/Player';
 
-import Sun from './entities/Sun';
-import Cube from './entities/Cube';
+// utils
+import utils from './utils';
 
-import objectCreator from './utils/objectGenerator';
-import objLoader from './utils/objLoader';
 
-const user = new User({
-  position: [1, 1, 1],
-  permissions: {
-    fly: true,
-  }
+// ================================================
+// ===================== SCENE =====================
+// ================================================
+
+const player = new Player({
+  position: [0, 0, 20],
 });
 
-const sun = new Sun({
-  time: 1000,
-  mapSize: {
-    width: 1024 * 4,
-    height: 1024 * 4,
-  }
-})
-
-
-const renderer = new Renderer({ user, sun });
+const renderer = new Renderer({
+  player: player,
+});
 
 renderer.init(document.querySelector('#root'));
-renderer.renderElement(new THREE.HemisphereLight(0xffffbb, 0x080820, 0.2));
-renderer.renderElement(new THREE.AmbientLight( 0x808080 ));
 
-const syncer = new Syncer(renderer);
 
-for (var i = 0; i < 10; i++) {
-  const cube = new Cube({
-    size: [1, 1, 1],
-    position: [1, 0, i],
-    color: 'red',
-    mass: 0,
+utils.loader.loadObj('./models/torus.obj')
+  .then((obj) => {
+    obj.scale.set(0.01, 0.01, 0.01);
+    obj.children[0].material = new THREE.MeshBasicMaterial({ color: 'red' })
+    renderer.render(obj);
   })
-  renderer.renderObject(cube)
-}
-
-const ground = objectCreator({
-  geometry: new THREE.PlaneGeometry(512, 512, 512),
-  material: new THREE.MeshLambertMaterial({ side: THREE.DoubleSide }),
-  textureUrl: './textures/grass3.jpg',
-  rotation: [90, 0, 0],
-  position: [0, -0.501, 0],
-  params: {
-    receiveShadow: true,
-  },
-})
-renderer.renderElement(ground);
-
-const groundShape = new CANNON.Plane();
-const groundMaterial = new CANNON.Material();
-groundMaterial.friction = 0;
-const groundBody = new CANNON.Body({
-  mass: 0,
-  shape: groundShape,
-  material: groundMaterial,
-});
-groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
-groundBody.position.set(0, -0.5, 0)
-
-renderer.renderPhysic(groundBody);
-
-objLoader('./models/torus.obj')
-  .then((object) => {
-    object.scale.set(0.02, 0.02, 0.02);
-    renderer.renderElement(object);
-  })
-
-syncer.sync();
-// dev
-window.renderer = renderer;
