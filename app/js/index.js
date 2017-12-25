@@ -14,6 +14,7 @@ import Sun from './entities/Sun';
 import Cube from './entities/Cube';
 
 import objectCreator from './utils/objectGenerator';
+import objLoader from './utils/objLoader';
 
 const user = new User({
   position: [1, 1, 1],
@@ -50,7 +51,7 @@ for (var i = 0; i < 10; i++) {
 }
 
 const ground = objectCreator({
-  geometry: new THREE.PlaneGeometry(1024, 1024, 1024),
+  geometry: new THREE.PlaneGeometry(512, 512, 512),
   material: new THREE.MeshLambertMaterial({ side: THREE.DoubleSide }),
   textureUrl: './textures/grass3.jpg',
   rotation: [90, 0, 0],
@@ -73,6 +74,12 @@ groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
 groundBody.position.set(0, -0.5, 0)
 
 renderer.renderPhysic(groundBody);
+
+objLoader('./models/torus.obj')
+  .then((object) => {
+    object.scale.set(0.02, 0.02, 0.02);
+    renderer.renderElement(object);
+  })
 
 syncer.sync();
 // dev

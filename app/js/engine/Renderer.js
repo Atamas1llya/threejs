@@ -1,18 +1,6 @@
 import * as THREE from 'three';
 import CANNON from 'cannon';
-
 import Stats from 'stats-js';
-
-
-var stats = new Stats();
-
-stats.setMode(0); // 0: fps, 1: ms
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.left = '0px';
-stats.domElement.style.top = '0px';
-
-document.body.appendChild(stats.domElement);
-
 
 export default class Renderer {
   constructor({ user, sun }) {
@@ -46,6 +34,7 @@ export default class Renderer {
     this.renderElement(this.sun.entity);
     this.renderPhysic(this.user.body);
 
+    this._initStats();
     this._resize();
     this._animate();
   }
@@ -66,9 +55,20 @@ export default class Renderer {
     this.scene.remove(body.mesh)
   }
 
+  _initStats = () => {
+    this.stats = new Stats();
+
+    this.stats.setMode(0); // 0: fps, 1: ms
+    this.stats.domElement.style.position = 'absolute';
+    this.stats.domElement.style.left = '0px';
+    this.stats.domElement.style.top = '0px';
+
+    document.body.appendChild(this.stats.domElement);
+  }
+
   // game loop
   _animate = () => {
-    stats.begin();
+    this.stats.begin();
 
     this.world.step(1/60);
     requestAnimationFrame(this._animate);
@@ -86,7 +86,7 @@ export default class Renderer {
     this.user.updatePosition();
     this.renderer.render(this.scene, this.user.camera);
 
-     stats.end();
+    this.stats.end();
   }
 
   // helpers

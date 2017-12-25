@@ -7,9 +7,12 @@ export default class Syncer {
     this.position = {x: 0, y: 0, z: 0};
     this.renderer = renderer;
     this._id = '';
+  }
+
+  sync = () => {
     this.socket = io('http://localhost:3000');
 
-    this.socket.on('connected', _id => {
+    this.socket.on('connected', (_id) => {
       setInterval(() => {
         if (this.updated) {
           this.socket.emit('user_position_updated', {
@@ -46,12 +49,6 @@ export default class Syncer {
     this.socket.on('user_disconnected', (_id) => {
       this.renderer.removeObjectById(_id);
     })
-
-
-  }
-
-  sync = () => {
-
   }
 
   get updated () {
